@@ -9,7 +9,7 @@ app = pn.Column(
         'style="width:100%; height:100vh; border:none;"></iframe>',
         sizing_mode="stretch_width"
     ),
-    sizing_mode="stretch_both"
+    sizing_mode="stretch_both",
 )
 
 app.servable()
