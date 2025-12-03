@@ -41,7 +41,7 @@
 <script>
 window.onload = function () {
 
-    Cesium.Ion.defaultAccessToken = "CESIUM_ION_TOKEN";
+    Cesium.Ion.defaultAccessToken = "";
 
     // Viewer
     const viewer = new Cesium.Viewer("cesiumContainer", {
@@ -57,12 +57,44 @@ window.onload = function () {
 
     // Punkty trasy drona
     const punktyTrasy = [
-        { lon: 21.181285, lat: 51.407653, h: 120 },
-        { lon: 21.0122,  lat: 52.2297,  h: 400 },
-        { lon: 19.9449,  lat: 50.0647,  h: 700 },
-        { lon: 17.0385,  lat: 51.1079,  h: 900 },
-        { lon: 18.6466,  lat: 54.3520,  h: 600 },
-        { lon: 21.181285, lat: 51.407653, h: 250 }
+        // Środek koła: 51.407653 N, 21.181285 E. Promień: 5 km. Wysokość: 500 m.
+        { lon: 21.181285, lat: 51.452653, h: 500 },
+        { lon: 21.196658, lat: 51.449175, h: 500 },
+        { lon: 21.211029, lat: 51.441865, h: 500 },
+        { lon: 21.223842, lat: 51.430935, h: 500 },
+        { lon: 21.234473, lat: 51.416867, h: 500 },
+        { lon: 21.242337, lat: 51.400588, h: 500 },
+        { lon: 21.246876, lat: 51.383161, h: 500 },
+        { lon: 21.247599, lat: 51.365778, h: 500 },
+        { lon: 21.244087, lat: 51.349342, h: 500 },
+        { lon: 21.236306, lat: 51.334796, h: 500 },
+        { lon: 21.224611, lat: 51.323214, h: 500 },
+        { lon: 21.209632, lat: 51.315715, h: 500 },
+        { lon: 21.192323, lat: 51.312984, h: 500 },
+        { lon: 21.173887, lat: 51.315715, h: 500 },
+        { lon: 21.156637, lat: 51.323214, h: 500 },
+        { lon: 21.140942, lat: 51.334796, h: 500 },
+        { lon: 21.127819, lat: 51.349342, h: 500 },
+        { lon: 21.117769, lat: 51.365778, h: 500 },
+        { lon: 21.111956, lat: 51.383161, h: 500 },
+        { lon: 21.110756, lat: 51.400588, h: 500 },
+        { lon: 21.113941, lat: 51.416867, h: 500 },
+        { lon: 21.121805, lat: 51.430935, h: 500 },
+        { lon: 21.133276, lat: 51.441865, h: 500 },
+        { lon: 21.146950, lat: 51.449175, h: 500 },
+        { lon: 21.162323, lat: 51.452653, h: 500 },
+        { lon: 21.181285, lat: 51.452653, h: 500 }, // Pełny okrąg (powrót do pozycji startowej)
+        { lon: 21.196658, lat: 51.449175, h: 500 },
+        { lon: 21.211029, lat: 51.441865, h: 500 },
+        { lon: 21.223842, lat: 51.430935, h: 500 },
+        { lon: 21.234473, lat: 51.416867, h: 500 },
+        { lon: 21.242337, lat: 51.400588, h: 500 },
+        { lon: 21.246876, lat: 51.383161, h: 500 },
+        { lon: 21.247599, lat: 51.365778, h: 500 },
+        { lon: 21.244087, lat: 51.349342, h: 500 },
+        { lon: 21.236306, lat: 51.334796, h: 500 },
+        { lon: 21.224611, lat: 51.323214, h: 500 },
+        { lon: 21.209632, lat: 51.315715, h: 500 } // Ostatni punkt (bliski startowemu)
     ];
 
     // Czas
@@ -94,7 +126,7 @@ window.onload = function () {
     });
 
     // Dron
-    /*const dron = viewer.entities.add({
+    const dron = viewer.entities.add({
         availability: new Cesium.TimeIntervalCollection([ new Cesium.TimeInterval({ start, stop }) ]),
         position: property,
         orientation: new Cesium.VelocityOrientationProperty(property),
@@ -110,8 +142,8 @@ window.onload = function () {
             trailTime: totalSeconds,
             material: Cesium.Color.YELLOW,
             show: false
-        }
-    });*/
+        }*/
+    });
     let shouldLockCamera = true;
 
     // Ustaw przycisk zawsze po lewej stronie toolbara Cesium
@@ -135,7 +167,6 @@ window.onload = function () {
     // Reaguj na resize okna — Cesium zmienia layout
     window.addEventListener("resize", positionToggleButton);
 
-
    // CAMERA OFFSET — follow camera
     const cameraOffset = new Cesium.HeadingPitchRange(
         0,                            // heading
@@ -154,6 +185,12 @@ window.onload = function () {
     });
     
     viewer.trackedEntity = dron;
+    const fovOffset = new Cesium.HeadingPitchRange(
+        0, // Heading (Kierunek) - 0 stopni, czyli patrzymy wzdłuż kierunku drona.
+        0, // Pitch (Nachylenie) - 0 stopni, patrzymy prosto przed siebie (horyzont).
+        1 // Range (Oddalenie) - 1 metr, aby wyjść z wnętrza obiektu.
+    );
+    viewer.zoomTo(dron, fovOffset);
 }
 </script>
 </body>
