@@ -41,7 +41,7 @@
 <script>
 window.onload = function () {
 
-    Cesium.Ion.defaultAccessToken = "CESIUM_ION_TOKEN";
+    Cesium.Ion.defaultAccessToken = "";
 
     // Viewer
     const viewer = new Cesium.Viewer("cesiumContainer", {
@@ -145,7 +145,59 @@ window.onload = function () {
         }*/
     });
     let shouldLockCamera = true;
+// ====================== DODAJESZ TYLKO TO ======================
 
+const liczbaTowarzyszy = 30;
+const maxOdlegloscOdToru = 5000;  // metrów (im więcej, tym dalej mogą być)
+const minH = 350;
+const maxH = 650;
+
+for (let i = 0; i < liczbaTowarzyszy; i++) {
+    // Losowa faza startowa + losowy promień i wysokość
+    const fazaOffset = Math.random() * punktyTrasy.length;
+    const skalaPromienia = 0.3 + Math.random() * 1.4; // 30–170% oryginalnego toru
+    const wysokosc = minH + Math.random() * (maxH - minH);
+
+    const property = new Cesium.SampledPositionProperty();
+
+    punktyTrasy.forEach((punkt, idx) => {
+        // Przesuwamy punkt radialnie od środka koła
+        const dx = punkt.lon - 21.181285;
+        const dy = punkt.lat - 51.407653;
+        const nowyLon = 21.181285 + dx * skalaPromienia;
+        const nowyLat = 51.407653 + dy * skalaPromienia;
+
+        // przesunięcie w czasie (żeby nie startowały wszystkie z tego samego miejsca)
+        const przesuniecieIdx = (idx + fazaOffset) % punktyTrasy.length;
+        const czas = Cesium.JulianDate.addSeconds(
+            viewer.clock.startTime,  // ← użyj tej samej zmiennej startowej co główny dron
+            przesuniecieIdx * 8,     // co ~8 sekund nowy punkt (dostosuj prędkość)
+            new Cesium.JulianDate()
+        );
+
+        const pozycja = Cesium.Cartesian3.fromDegrees(nowyLon, nowyLat, wysokosc);
+        property.addSample(czas, pozycja);
+    });
+
+    property.setInterpolationOptions({
+        interpolationDegree: 2,
+        interpolationAlgorithm: Cesium.LagrangePolynomialApproximation
+    });
+
+    viewer.entities.add({
+        position: property,
+        orientation: new Cesium.VelocityOrientationProperty(property),
+        model: {
+            uri: "https://raw.githubusercontent.com/CesiumGS/cesium/main/Apps/SampleData/models/CesiumDrone/CesiumDrone.glb", // ten sam model co Twój dron
+            minimumPixelSize: 48,
+            maximumScale: 120,
+            scale: 10 + Math.random() * 12,
+            color: Cesium.C
+        // opcjonalnie ścieżka
+        },
+        path: { width: 1.5, material: Cesium.Color.CYAN.withAlpha(0.6) }
+    });
+}
     // Ustaw przycisk zawsze po lewej stronie toolbara Cesium
     function positionToggleButton() {
         const toolbar = document.querySelector(".cesium-viewer-toolbar");
@@ -168,21 +220,21 @@ window.onload = function () {
     window.addEventListener("resize", positionToggleButton);
 
 
-   viewer.scene.postUpdate.addEventListener(function (scene, time) {
+    viewer.scene.postUpdate.addEventListener(function (scene, time) {
     const pos = dron.position.getValue(time);
     const quat = dron.orientation.getValue(time);
 
     if (pos && quat) {
-        const hpr = Cesium.HeadingPitchRoll.fromQuaternion(quat);
-
-        viewer.camera.setView({
-            destination: pos,
-            orientation: {
-                heading: hpr.heading + Math.PI,
-                pitch: hpr.pitch,
-                roll: hpr.roll
-            }
-        });
+    const hpr = Cesium.HeadingPitchRoll.fromQuaternion(quat);
+    const cameraRoll = hpr.roll * 0.75;
+    viewer.camera.setView({
+        destination: pos,
+        orientation: {
+            heading: hpr.heading + Math.PI,
+            pitch:   Cesium.Math.toRadians(-10),
+            roll    :-cameraRoll
+        }
+    });
 
         // Lekko do przodu, żeby nie być w środku modelu
         viewer.camera.moveForward(2);
