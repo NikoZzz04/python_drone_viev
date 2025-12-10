@@ -3,12 +3,12 @@
 <summary>Kliknij, żeby zobaczyć informację o projekcie!</summary>
 Projekt obrazuje widok na mapę ziemską z "oczu" drona. Widać też 
 </details>
-## Technologie
+# Technologie
 <ul>
 <li>Python Panel</li>
 <li>CesiumJs</li>
 </ul>
-## Uruchamianie
+# Uruchamianie
 <ol>
 <li>Pobierz kod</li>
 <li>Otwórz dwie terminale</li>
