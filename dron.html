@@ -41,7 +41,7 @@
 <script>
 window.onload = function () {
 
-    Cesium.Ion.defaultAccessToken = "";
+    Cesium.Ion.defaultAccessToken = "CESIUM_ION_TOKEN";
 
     // Viewer
     const viewer = new Cesium.Viewer("cesiumContainer", {
@@ -57,44 +57,79 @@ window.onload = function () {
 
     // Punkty trasy drona
     const punktyTrasy = [
-    // Środek koła: 51.407653 N, 21.181285 E. Promień: 5 km. Wysokość: 500 m.
-    { lon: 21.181285, lat: 51.452653, h: 500 },
-    { lon: 21.196658, lat: 51.449175, h: 500 },
-    { lon: 21.211029, lat: 51.441865, h: 500 },
-    { lon: 21.223842, lat: 51.430935, h: 500 },
-    { lon: 21.234473, lat: 51.416867, h: 500 },
-    { lon: 21.242337, lat: 51.400588, h: 500 },
-    { lon: 21.246876, lat: 51.383161, h: 500 },
-    { lon: 21.247599, lat: 51.365778, h: 500 },
-    { lon: 21.244087, lat: 51.349342, h: 500 },
-    { lon: 21.236306, lat: 51.334796, h: 500 },
-    { lon: 21.224611, lat: 51.323214, h: 500 },
-    { lon: 21.209632, lat: 51.315715, h: 500 },
-    { lon: 21.192323, lat: 51.312984, h: 500 },
-    { lon: 21.173887, lat: 51.315715, h: 500 },
-    { lon: 21.156637, lat: 51.323214, h: 500 },
-    { lon: 21.140942, lat: 51.334796, h: 500 },
-    { lon: 21.127819, lat: 51.349342, h: 500 },
-    { lon: 21.117769, lat: 51.365778, h: 500 },
-    { lon: 21.111956, lat: 51.383161, h: 500 },
-    { lon: 21.110756, lat: 51.400588, h: 500 },
-    { lon: 21.113941, lat: 51.416867, h: 500 },
-    { lon: 21.121805, lat: 51.430935, h: 500 },
-    { lon: 21.133276, lat: 51.441865, h: 500 },
-    { lon: 21.146950, lat: 51.449175, h: 500 },
-    { lon: 21.162323, lat: 51.452653, h: 500 },
-    { lon: 21.181285, lat: 51.452653, h: 500 }, // Pełny okrąg (powrót do pozycji startowej)
-    { lon: 21.196658, lat: 51.449175, h: 500 },
-    { lon: 21.211029, lat: 51.441865, h: 500 },
-    { lon: 21.223842, lat: 51.430935, h: 500 },
-    { lon: 21.234473, lat: 51.416867, h: 500 },
-    { lon: 21.242337, lat: 51.400588, h: 500 },
-    { lon: 21.246876, lat: 51.383161, h: 500 },
-    { lon: 21.247599, lat: 51.365778, h: 500 },
-    { lon: 21.244087, lat: 51.349342, h: 500 },
-    { lon: 21.236306, lat: 51.334796, h: 500 },
-    { lon: 21.224611, lat: 51.323214, h: 500 },
-    { lon: 21.209632, lat: 51.315715, h: 500 } // Ostatni punkt (bliski startowemu)
+    { lon: 21.181285, lat: 51.452653, h: 500 }, // 0°   – północ
+    { lon: 21.196753, lat: 51.449346, h: 500 }, // 10°
+    { lon: 21.211493, lat: 51.442294, h: 500 }, // 20°
+    { lon: 21.224658, lat: 51.431977, h: 500 }, // 30°
+    { lon: 21.235484, lat: 51.418942, h: 500 }, // 40°
+    { lon: 21.243314, lat: 51.403791, h: 500 }, // 50°
+    { lon: 21.247615, lat: 51.387160, h: 500 }, // 60°
+    { lon: 21.248000, lat: 51.369700, h: 500 }, // 70°
+    { lon: 21.244258, lat: 51.352050, h: 500 }, // 80°
+    { lon: 21.236266, lat: 51.334806, h: 500 }, // 90°  – wschód
+    { lon: 21.224089, lat: 51.318579, h: 500 }, // 100°
+    { lon: 21.208426, lat: 51.304137, h: 500 }, // 110°
+    { lon: 21.189948, lat: 51.291926, h: 500 }, // 120°
+    { lon: 21.169426, lat: 51.282137, h: 500 }, // 130°
+    { lon: 21.147426, lat: 51.275137, h: 500 }, // 140°
+    { lon: 21.124948, lat: 51.271137, h: 500 }, // 150°
+    { lon: 21.102853, lat: 51.270137, h: 500 }, // 160°
+    { lon: 21.081853, lat: 51.272137, h: 500 }, // 170°
+    { lon: 21.062426, lat: 51.277137, h: 500 }, // 180° – południe
+    { lon: 21.045137, lat: 51.285137, h: 500 }, // 190°
+    { lon: 21.030426, lat: 51.295926, h: 500 }, // 200°
+    { lon: 21.018426, lat: 51.309137, h: 500 }, // 210°
+    { lon: 21.009426, lat: 51.324137, h: 500 }, // 220°
+    { lon: 21.003426, lat: 51.340426, h: 500 }, // 230°
+    { lon: 21.000426, lat: 51.357137, h: 500 }, // 240°
+    { lon: 21.000426, lat: 51.374137, h: 500 }, // 250°
+    { lon: 21.003426, lat: 51.390426, h: 500 }, // 260°
+    { lon: 21.009426, lat: 51.406137, h: 500 }, // 270° – zachód
+    { lon: 21.018426, lat: 51.420426, h: 500 }, // 280°
+    { lon: 21.030426, lat: 51.432137, h: 500 }, // 290°
+    { lon: 21.045137, lat: 51.441137, h: 500 }, // 300°
+    { lon: 21.062426, lat: 51.447137, h: 500 },   // 310°
+    { lon: 21.081137, lat: 51.450137, h: 500 }, // 320°
+    { lon: 21.101426, lat: 51.450137, h: 500 }, // 330°
+    { lon: 21.121853, lat: 51.447137, h: 500 }, // 340°
+    { lon: 21.141426, lat: 51.441137, h: 500 }, // 350°
+    { lon: 21.159426, lat: 51.432137, h: 500 }, // 360°/0°
+    { lon: 21.141426, lat: 51.441137, h: 500 },
+    { lon: 21.121853, lat: 51.447137, h: 500 },
+    { lon: 21.101426, lat: 51.450137, h: 500 },
+    { lon: 21.081137, lat: 51.450137, h: 500 },
+    { lon: 21.062426, lat: 51.447137, h: 500 },
+    { lon: 21.045137, lat: 51.441137, h: 500 },
+    { lon: 21.030426, lat: 51.432137, h: 500 },
+    { lon: 21.018426, lat: 51.420426, h: 500 },
+    { lon: 21.009426, lat: 51.406137, h: 500 },
+    { lon: 21.003426, lat: 51.390426, h: 500 },
+    { lon: 21.000426, lat: 51.374137, h: 500 },
+    { lon: 21.000426, lat: 51.357137, h: 500 },
+    { lon: 21.003426, lat: 51.340426, h: 500 },
+    { lon: 21.009426, lat: 51.324137, h: 500 },
+    { lon: 21.018426, lat: 51.309137, h: 500 },
+    { lon: 21.030426, lat: 51.295926, h: 500 },
+    { lon: 21.045137, lat: 51.285137, h: 500 },
+    { lon: 21.062426, lat: 51.277137, h: 500 },
+    { lon: 21.081853, lat: 51.272137, h: 500 },
+    { lon: 21.102853, lat: 51.270137, h: 500 },
+    { lon: 21.124948, lat: 51.271137, h: 500 },
+    { lon: 21.147426, lat: 51.275137, h: 500 },
+    { lon: 21.169426, lat: 51.282137, h: 500 },
+    { lon: 21.189948, lat: 51.291926, h: 500 },
+    { lon: 21.208426, lat: 51.304137, h: 500 },
+    { lon: 21.224089, lat: 51.318579, h: 500 },
+    { lon: 21.236266, lat: 51.334806, h: 500 },
+    { lon: 21.244258, lat: 51.352050, h: 500 },
+    { lon: 21.248000, lat: 51.369700, h: 500 },
+    { lon: 21.247615, lat: 51.387160, h: 500 },
+    { lon: 21.243314, lat: 51.403791, h: 500 },
+    { lon: 21.235484, lat: 51.418942, h: 500 },
+    { lon: 21.224658, lat: 51.431977, h: 500 },
+    { lon: 21.211493, lat: 51.442294, h: 500 },
+    { lon: 21.196753, lat: 51.449346, h: 500 },
+    { lon: 21.181285, lat: 51.452653, h: 500 }  // zamknięcie pętli
 ];
 
     // Czas
@@ -224,21 +259,44 @@ for (let i = 0; i < liczbaTowarzyszy; i++) {
     const pos = dron.position.getValue(time);
     const quat = dron.orientation.getValue(time);
 
-    if (pos && quat) {
+    if (!pos || !quat) return;
+    const droneRotation = Cesium.Matrix3.fromQuaternion(quat);
     const hpr = Cesium.HeadingPitchRoll.fromQuaternion(quat);
-    const cameraRoll = hpr.roll * 0.75;
+    const direction = new Cesium.Cartesian3();
+    const up        = new Cesium.Cartesian3();
+    const right     = new Cesium.Cartesian3();
+
+    Cesium.Matrix3.getColumn(droneRotation, 2, direction); // +Z drona = przód
+    Cesium.Matrix3.getColumn(droneRotation, 1, up);        // +Y drona = góra
+    Cesium.Matrix3.getColumn(droneRotation, 0, right);     // +X drona = prawo
+
+    // === Najlepsza funkcja do wyciągnięcia prawdziwego roll ===
+    function getRoll(dir, upVec, rightVec) {
+    console.log({cccc: Cesium.Math.equalsEpsilon(Math.abs(dir.z), 1.0, Cesium.Math.EPSILON5)})
+    return 0.0;
+        if (Cesium.Math.equalsEpsilon(Math.abs(dir.z), 1.0, Cesium.Math.EPSILON5)) {
+            return 0.0; // dron patrzy prosto w górę/dół – roll nieokreślony
+        }
+        return Math.atan2(-rightVec.z, upVec.z);
+    }
+
+    const roll = getRoll(direction, up, right);
+
+    // Opcjonalnie: ogranicz roll do realistycznego zakresu (drony nie robią 360°)
+    //const maxRoll = Cesium.Math.toRadians(40);
+    //const clampedRoll = Cesium.Math.clamp(roll - Math.PI, -maxRoll, maxRoll); // -π..π → -60°..60°
+    console.log(roll)
+    // Ustawiamy kamerę – idealnie zsynchronizowaną z dronem
     viewer.camera.setView({
         destination: pos,
         orientation: {
-            heading: hpr.heading + Math.PI,
-            pitch:   Cesium.Math.toRadians(-10),
-            roll    :-cameraRoll
+            heading: hpr.heading+Math.PI, // +180° bo kamera patrzy do tyłu modelu
+            pitch:   Cesium.Math.toRadians(-8),
+            roll:    0.0  // tu jest prawdziwy, dynamiczny roll!
         }
     });
 
-        // Lekko do przodu, żeby nie być w środku modelu
-        viewer.camera.moveForward(2);
-    }
+    viewer.camera.moveForward(2.5); // lekkie wysunięcie z modelu
 });
 }
 </script>
